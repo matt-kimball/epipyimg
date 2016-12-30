@@ -1,0 +1,14 @@
+#!/bin/sh
+
+RPI_ROOT=$(realpath $(dirname $0)/..)
+
+$RPI_ROOT/bin/img-mount
+
+if [ ! -e $RPI_ROOT/root/etc ]
+then
+	echo $0: failed to mount root fs
+	exit 1
+fi
+
+cp -a $RPI_ROOT/fs-emu/* $RPI_ROOT/root
+$RPI_ROOT/bin/img-umount

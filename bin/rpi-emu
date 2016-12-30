@@ -1,0 +1,16 @@
+#!/bin/sh
+
+KERNEL_NAME=kernel-qemu-4.4.13-jessie
+KERNEL_CMDLINE="root=/dev/sda2 console=ttyAMA0 ro panic=1"
+
+RPI_ROOT=$(realpath $(dirname $0)/..)
+KERNEL=$RPI_ROOT/img/$KERNEL_NAME
+IMAGE=$RPI_ROOT/img/disk.img
+
+export QEMU_AUDIO_DRV=none
+QEMU_MACHINE_FLAGS="-cpu arm1176 -m 256 -M versatilepb"
+QEMU_GEN_FLAGS="-no-reboot -nographic"
+QEMU_IMAGE_FLAGS="-kernel $KERNEL -drive format=raw,file=$IMAGE"
+QEMU_FLAGS="$QEMU_MACHINE_FLAGS $QEMU_GEN_FLAGS $QEMU_IMAGE_FLAGS"
+
+qemu-system-arm $QEMU_FLAGS -append "$KERNEL_CMDLINE $*"
