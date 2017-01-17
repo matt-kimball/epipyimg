@@ -8,7 +8,7 @@ KERNEL=$RPI_ROOT/img/$KERNEL_NAME
 IMAGE=$RPI_ROOT/img/disk.img
 
 export QEMU_AUDIO_DRV=none
-QEMU_MACHINE_FLAGS="-cpu arm1176 -m 256 -M versatilepb"
+QEMU_MACHINE_FLAGS="-cpu arm1176 -m 256 -M versatilepb -net nic,model=virtio -net tap,ifname=tap0,script=no,downscript=no"
 QEMU_GEN_FLAGS="-no-reboot -nographic"
 QEMU_IMAGE_FLAGS="-kernel $KERNEL -drive format=raw,file=$IMAGE"
 QEMU_FLAGS="$QEMU_MACHINE_FLAGS $QEMU_GEN_FLAGS $QEMU_IMAGE_FLAGS"

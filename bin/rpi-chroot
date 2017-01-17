@@ -1,0 +1,13 @@
+#!/bin/sh
+
+RPI_ROOT=$(realpath $(dirname $0)/..)
+
+if [ ! -e $RPI_ROOT/root/etc ]
+then
+	echo $0: root fs not mounted
+	exit 1
+fi
+
+cp $(which qemu-arm-static) $RPI_ROOT/root/usr/bin
+chroot $RPI_ROOT/root $*
+rm $RPI_ROOT/root/usr/bin/qemu-arm-static
