@@ -2,15 +2,13 @@
 
 RPI_ROOT=$(realpath $(dirname $0)/..)
 
-touch $RPI_ROOT/boot/ssh
+cp -r $RPI_ROOT/boot/* $RPI_ROOT/root/boot
 
 cp -r $RPI_ROOT/../epipyweb $RPI_ROOT/root/tmp
+cp -r $RPI_ROOT/../epipynet $RPI_ROOT/root/tmp
 
 cp $RPI_ROOT/bin/emu-install $RPI_ROOT/root/tmp/emu-install
 $RPI_ROOT/bin/rpi-chroot tmp/emu-install
-killall nginx
-
-cp $RPI_ROOT/etc/dnsmasq.conf $RPI_ROOT/root/etc
-cp $RPI_ROOT/etc/network/interfaces $RPI_ROOT/root/etc/network
+killall /usr/bin/qemu-arm-static
 
 rm -fr $RPI_ROOT/root/tmp/*

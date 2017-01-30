@@ -1,12 +1,63 @@
 #!/bin/sh
 
-PACKAGES="python3 python3-pip sqlite3 nginx uwsgi uwsgi-plugin-python3 dnsmasq"
+LANG="C"
+
+PACKAGES="\
+    avahi-daemon \
+    dnsmasq \
+    nginx \
+    ntp \
+    openssh-server \
+    parted \
+    python3 \
+    python3-setuptools \
+    sudo \
+    sqlite3 \
+    uwsgi \
+    uwsgi-plugin-python3"
+
 PYTHON_PACKAGES="typing"
+
+cat <<INSTALL_RESOLV >/etc/resolv.conf
+nameserver 8.8.8.8
+nameserver 8.8.4.4
+INSTALL_RESOLV
+
+echo deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi >/etc/apt/sources.list
+cd /tmp
+wget http://archive.raspbian.org/raspbian.public.key
+apt-key add raspbian.public.key
 
 apt-get update
 apt-get dist-upgrade -y
 apt-get install -y $PACKAGES
-pip3 install $PYTHON_PACKAGES
+easy_install3 $PYTHON_PACKAGES
+
+echo epipylon >/etc/hostname
+
+cat <<END_ISSUE >/etc/issue
+Epipylon
+
+END_ISSUE
+
+cat <<END_FSTAB >/etc/fstab
+proc            /proc           proc    defaults          0       0
+/dev/mmcblk0p1  /boot           vfat    defaults          0       2
+/dev/mmcblk0p2  /               ext4    defaults,noatime  0       1
+END_FSTAB
+
+cat <<END_RESOLV >/etc/resolv.conf
+search local
+END_RESOLV
 
 cd /tmp/epipyweb
 ./install.sh
+
+cd /tmp/epipynet
+./install.sh
+
+# password: epipylon
+useradd epipylon -s /bin/bash -G sudo -p '$6$14Xopwwl$YxOcG0MNmRGu2JhDtQ.mihxQ2mmP9ffF.mm/.azFNZ4x1TfSCjVRrDNhcRbXWVuZDTM7ddWqdwajB3Oq8LOYP0'
+rm -fr /home/epipylon
+cp -R /etc/skel /home/epipylon
+chown -R epipylon.epipylon /home/epipylon

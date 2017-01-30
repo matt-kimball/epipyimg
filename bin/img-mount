@@ -10,7 +10,9 @@ BOOT_OFFSET=$(expr 512 '*' $BOOT_SECTOR)
 ROOT_OFFSET=$(expr 512 '*' $ROOT_SECTOR)
 
 mkdir -p $RPI_ROOT/boot
-mkdir -p $RPI_ROOT/root
 
-mount -o offset=$BOOT_OFFSET -t vfat $IMAGE $RPI_ROOT/boot
 mount -o offset=$ROOT_OFFSET -t ext4 $IMAGE $RPI_ROOT/root
+mkdir -p $RPI_ROOT/root/boot
+mount -o offset=$BOOT_OFFSET -t vfat $IMAGE $RPI_ROOT/root/boot
+mkdir -p $RPI_ROOT/root/proc
+mount -t proc proc $RPI_ROOT/root/proc

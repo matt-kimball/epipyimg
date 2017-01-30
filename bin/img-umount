@@ -2,5 +2,6 @@
 
 RPI_ROOT=$(realpath $(dirname $0)/..)
 
-umount $RPI_ROOT/boot
+umount $RPI_ROOT/root/proc
+umount $RPI_ROOT/root/boot
 umount $RPI_ROOT/root

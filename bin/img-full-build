@@ -1,0 +1,10 @@
+#!/bin/sh
+
+RPI_ROOT=$(realpath $(dirname $0)/..)
+
+mkdir -p $RPI_ROOT/img
+mkdir -p $RPI_ROOT/root
+
+$RPI_ROOT/bin/rpi-bootstrap
+$RPI_ROOT/bin/rpi-install
+$RPI_ROOT/bin/img-umount

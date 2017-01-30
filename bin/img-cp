@@ -1,0 +1,8 @@
+#!/bin/sh
+
+RPI_ROOT=$(realpath $(dirname $0)/..)
+
+umount /dev/sdb1
+umount /dev/sdb2
+
+dd if=$RPI_ROOT/img/disk.img of=/dev/sdb bs=4M status=progress
