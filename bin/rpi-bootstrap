@@ -2,8 +2,6 @@
 
 RPI_ROOT=$(realpath $(dirname $0)/..)
 
-RASPBIAN_REPO=https://archive.raspbian.org/raspbian
-
 rm -f $RPI_ROOT/img/disk.img
 
 dd if=/dev/zero of=$RPI_ROOT/img/part.img bs=1M count=4
@@ -23,4 +21,4 @@ SFDISK_LAYOUT
 $RPI_ROOT/bin/img-mount
 cp -r boot/* root/boot
 
-debootstrap --no-check-gpg --arch=armhf jessie root $RASPBIAN_REPO
+debootstrap --no-check-gpg --arch=armhf jessie root $DEB_REPO

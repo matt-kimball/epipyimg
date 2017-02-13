@@ -4,34 +4,39 @@ LANG="C"
 
 PACKAGES="\
     avahi-daemon \
-    dnsmasq \
-    nginx \
+    epibase \
+    epipynet \
+    epipyweb \
     ntp \
-    openssh-server \
-    parted \
-    python3 \
-    python3-setuptools \
-    sudo \
+    samba \
     sqlite3 \
-    uwsgi \
-    uwsgi-plugin-python3"
+    sudo"
 
-PYTHON_PACKAGES="typing"
+DEBUG_PACKAGES="\
+    openssh-server"
 
 cat <<INSTALL_RESOLV >/etc/resolv.conf
 nameserver 8.8.8.8
 nameserver 8.8.4.4
 INSTALL_RESOLV
 
-echo deb http://mirrordirector.raspbian.org/raspbian/ jessie main contrib non-free rpi >/etc/apt/sources.list
+mount -t proc proc /proc
+
+echo deb $DEB_REPO jessie main >/etc/apt/sources.list
 cd /tmp
-wget http://archive.raspbian.org/raspbian.public.key
-apt-key add raspbian.public.key
+wget $DEB_REPO/conf/epipylon.gpg.key
+apt-key add epipylon.gpg.key
 
 apt-get update
 apt-get dist-upgrade -y
 apt-get install -y $PACKAGES
-easy_install3 $PYTHON_PACKAGES
+
+systemctl disable smbd.service
+
+if [ -z "$EPIPYLON_RELEASE" ]
+then
+    apt-get install -y $DEBUG_PACKAGES
+fi
 
 echo epipylon >/etc/hostname
 
@@ -49,12 +54,6 @@ END_FSTAB
 cat <<END_RESOLV >/etc/resolv.conf
 search local
 END_RESOLV
-
-cd /tmp/epipyweb
-./install.sh
-
-cd /tmp/epipynet
-./install.sh
 
 # password: epipylon
 useradd epipylon -s /bin/bash -G sudo -p '$6$14Xopwwl$YxOcG0MNmRGu2JhDtQ.mihxQ2mmP9ffF.mm/.azFNZ4x1TfSCjVRrDNhcRbXWVuZDTM7ddWqdwajB3Oq8LOYP0'

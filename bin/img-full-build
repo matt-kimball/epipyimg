@@ -1,5 +1,17 @@
 #!/bin/sh
 
+if [ -z "$EPIPYLON_RELEASE" ]
+then
+    echo Building DEBUG image
+    #  staging.local
+    export DEB_REPO=http://192.168.254.2/epipylon
+else
+    echo Building RELEASE image
+    export DEB_REPO=http://packages.epipylon.com/epipylon
+fi
+sleep 2
+
+
 RPI_ROOT=$(realpath $(dirname $0)/..)
 
 mkdir -p $RPI_ROOT/img
