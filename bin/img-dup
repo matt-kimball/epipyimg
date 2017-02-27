@@ -1,0 +1,28 @@
+#!/bin/sh
+
+RPI_ROOT=$(realpath $(dirname $0)/..)
+
+dd if=/dev/zero of=$RPI_ROOT/img/part.img bs=1M count=4
+dd if=/dev/zero of=$RPI_ROOT/img/boot.img bs=1M count=63
+mkfs -t vfat $RPI_ROOT/img/boot.img
+dd if=/dev/zero of=$RPI_ROOT/img/root.img bs=1M count=957
+mkfs -t ext4 $RPI_ROOT/img/root.img
+
+mkdir -p $RPI_ROOT/dup
+mount -t ext4 $RPI_ROOT/img/root.img $RPI_ROOT/dup
+mkdir -p $RPI_ROOT/dup/boot
+mount -t vfat $RPI_ROOT/img/boot.img $RPI_ROOT/dup/boot
+
+rsync -ax $RPI_ROOT/root/ $RPI_ROOT/dup
+rsync -ax $RPI_ROOT/root/boot/ $RPI_ROOT/dup/boot
+
+umount $RPI_ROOT/dup/boot
+umount $RPI_ROOT/dup
+
+cat $RPI_ROOT/img/part.img $RPI_ROOT/img/boot.img $RPI_ROOT/img/root.img >$RPI_ROOT/img/dup.img
+rm -f $RPI_ROOT/img/part.img $RPI_ROOT/img/boot.img $RPI_ROOT/img/root.img
+
+sfdisk $RPI_ROOT/img/dup.img <<SFDISK_LAYOUT
+8192 129024 C
+137216 1959936 83
+SFDISK_LAYOUT

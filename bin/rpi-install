@@ -2,12 +2,10 @@
 
 RPI_ROOT=$(realpath $(dirname $0)/..)
 
-cp -r $RPI_ROOT/boot/* $RPI_ROOT/root/boot
-
 cp $RPI_ROOT/bin/emu-install $RPI_ROOT/root/tmp/emu-install
 $RPI_ROOT/bin/rpi-chroot tmp/emu-install
 
 killall /usr/bin/qemu-arm-static
-sleep 1
+sleep 2
 
 rm -fr $RPI_ROOT/root/tmp/*

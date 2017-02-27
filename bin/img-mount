@@ -9,8 +9,7 @@ ROOT_SECTOR=$(fdisk -l $IMAGE | grep img2 | awk '{ print $2 }')
 BOOT_OFFSET=$(expr 512 '*' $BOOT_SECTOR)
 ROOT_OFFSET=$(expr 512 '*' $ROOT_SECTOR)
 
-mkdir -p $RPI_ROOT/boot
-
+mkdir -p $RPI_ROOT/root
 mount -o offset=$ROOT_OFFSET -t ext4 $IMAGE $RPI_ROOT/root
 mkdir -p $RPI_ROOT/root/boot
 mount -o offset=$BOOT_OFFSET -t vfat $IMAGE $RPI_ROOT/root/boot

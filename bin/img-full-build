@@ -19,4 +19,8 @@ mkdir -p $RPI_ROOT/root
 
 $RPI_ROOT/bin/rpi-bootstrap
 $RPI_ROOT/bin/rpi-install
+$RPI_ROOT/bin/img-dup
 $RPI_ROOT/bin/img-umount
+
+rm -f $RPI_ROOT/img/disk.img
+mv -f $RPI_ROOT/img/dup.img $RPI_ROOT/img/disk.img

@@ -19,6 +19,5 @@ sfdisk $RPI_ROOT/img/disk.img <<SFDISK_LAYOUT
 SFDISK_LAYOUT
 
 $RPI_ROOT/bin/img-mount
-cp -r boot/* root/boot
 
 debootstrap --no-check-gpg --arch=armhf jessie root $DEB_REPO

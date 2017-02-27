@@ -8,6 +8,8 @@ PACKAGES="\
     epipynet \
     epipyweb \
     ntp \
+    raspberrypi-bootloader \
+    raspberrypi-kernel \
     samba \
     sqlite3 \
     sudo"
@@ -37,6 +39,8 @@ if [ -z "$EPIPYLON_RELEASE" ]
 then
     apt-get install -y $DEBUG_PACKAGES
 fi
+
+apt-get clean
 
 echo epipylon >/etc/hostname
 
