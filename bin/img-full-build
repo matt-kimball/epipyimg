@@ -1,16 +1,44 @@
 #!/bin/sh
 
-if [ -z "$EPIPYLON_RELEASE" ]
+if [ "$1" == "release" ]
 then
-    echo Building DEBUG image
-    #  staging.local
-    export DEB_REPO=http://192.168.254.2/epipylon
+	echo Building RELEASE image
+	export EPIPYLON_RELEASE=1
+elif [ "$1" == "devel" ]
+then
+    echo Building DEVEL image
+	export EPIPYLON_DEVEL=1
+elif [ "$1" == "staging" ]
+then
+	echo Building STAGING image
+	export EPIPYLON_STAGING=1
 else
-    echo Building RELEASE image
+	echo "Usage: img-full-build <target>"
+	echo ""
+	echo "Where target is one of:  release, devel, staging"
+	exit 1
+fi
+
+if [ "$EPIPYLON_STAGING" ]
+then
+	if [ -z "$STAGING_REPO" ]
+	then
+		echo "No STAGING_REPO set."
+		echo ""
+		echo "Set STAGING_REPO to the IP address of a package repository."
+		echo ""
+		echo "For example:"
+		echo ""
+		echo "    STAGING_REPO=192.168.254.2 img-full-build staging"
+		echo ""
+		exit 1
+	else
+		#  staging.local
+		export DEB_REPO=http://$STAGING_REPO/epipylon
+    fi
+else
     export DEB_REPO=http://packages.epipylon.com/epipylon
 fi
-sleep 2
-
 
 RPI_ROOT=$(realpath $(dirname $0)/..)
 
@@ -22,5 +50,16 @@ $RPI_ROOT/bin/rpi-install
 $RPI_ROOT/bin/img-dup
 $RPI_ROOT/bin/img-umount
 
-rm -f $RPI_ROOT/img/disk.img
-mv -f $RPI_ROOT/img/dup.img $RPI_ROOT/img/disk.img
+if [ "$EPIPYLON_STAGING" ]
+then
+	IMGNAME=epipylon-staging-$(date +%Y%m%d%H%M%S).img
+elif [ "$EPIPYLON_DEVEL" ]
+then
+	IMGNAME=epipylon-devel-$(date +%Y%m%d%H%M%S).img
+else
+	IMGNAME=epipylon-$(date +%Y%m%d%H%M%S).img
+fi
+
+mv -f $RPI_ROOT/img/dup.img $RPI_ROOT/img/$IMGNAME
+echo ""
+echo "built img/$IMGNAME"

@@ -14,8 +14,12 @@ PACKAGES="\
     sqlite3 \
     sudo"
 
-DEBUG_PACKAGES="\
-    openssh-server"
+DEVEL_PACKAGES="\
+    openssh-server \
+    git \
+    python3-pip \
+    npm \
+    zile"
 
 cat <<INSTALL_RESOLV >/etc/resolv.conf
 nameserver 8.8.8.8
@@ -37,7 +41,10 @@ systemctl disable smbd.service
 
 if [ -z "$EPIPYLON_RELEASE" ]
 then
-    apt-get install -y $DEBUG_PACKAGES
+    apt-get install -y $DEVEL_PACKAGES
+
+    ln -sf /usr/bin/nodejs /usr/bin/node
+    systemctl disable epipylon-apt-update.timer
 fi
 
 apt-get clean

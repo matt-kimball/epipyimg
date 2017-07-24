@@ -1,8 +1,16 @@
 #!/bin/sh
 
+if [ -z "$1" ]
+then
+	echo "Usage: img-cp <image-path>"
+	exit 1
+else
+	IMAGE_PATH=$1
+fi
+
 RPI_ROOT=$(realpath $(dirname $0)/..)
 
 umount /dev/sdf1
 umount /dev/sdf2
 
-dd if=$RPI_ROOT/img/disk.img of=/dev/sdf bs=4M status=progress
+dd if=$IMAGE_PATH of=/dev/sdf bs=4M status=progress

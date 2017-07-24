@@ -7,7 +7,8 @@ rm -f $RPI_ROOT/img/disk.img
 dd if=/dev/zero of=$RPI_ROOT/img/part.img bs=1M count=4
 dd if=/dev/zero of=$RPI_ROOT/img/boot.img bs=1M count=63
 mkfs -t vfat $RPI_ROOT/img/boot.img
-dd if=/dev/zero of=$RPI_ROOT/img/root.img bs=1M count=957
+
+dd if=/dev/zero of=$RPI_ROOT/img/root.img bs=1M count=1981
 mkfs -t ext4 $RPI_ROOT/img/root.img
 
 cat $RPI_ROOT/img/part.img $RPI_ROOT/img/boot.img $RPI_ROOT/img/root.img >$RPI_ROOT/img/disk.img
@@ -15,7 +16,7 @@ rm -f $RPI_ROOT/img/part.img $RPI_ROOT/img/boot.img $RPI_ROOT/img/root.img
 
 sfdisk $RPI_ROOT/img/disk.img <<SFDISK_LAYOUT
 8192 129024 C
-137216 1959936 83
+137216 4057088 83
 SFDISK_LAYOUT
 
 $RPI_ROOT/bin/img-mount
