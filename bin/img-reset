@@ -1,8 +1,0 @@
-#!/bin/sh
-
-IMG_NAME=2016-11-25-raspbian-jessie-lite.img
-
-RPI_ROOT=$(realpath $(dirname $0)/..)
-RPI_IMG=$RPI_ROOT/img
-
-cp $RPI_IMG/$IMG_NAME $RPI_IMG/disk.img
